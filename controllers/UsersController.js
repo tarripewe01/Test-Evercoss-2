@@ -39,10 +39,29 @@ const Login = async (req, res) => {
                 email: req.body.email
             }
         })
-        
+
+        // Jika akun pengguna terkunci, maka kirimkan pesan error
+        if (user[0].lockedUntil && user[0].lockedUntil > Date.now()) {
+            const remainingTime = Math.ceil((user.lockedUntil - Date.now()) / 1000);
+            return res.status(401).json({ errors: [{ msg: `Account is locked. Please try again in ${remainingTime} seconds.` }] });
+        }
+
         // Periksa password
         const match = await bcrypt.compare(req.body.password, user[0].password)
-        if (!match) return res.status(400).json({ msg: "Wrong Password" })
+        if (!match) {
+            // Jika password salah, maka increment counter loginAttempts
+            await user[0].increment('loginAttempts');
+            const loginAttempts = user[0].getDataValue('loginAttempts');
+            if (loginAttempts >= 3) {
+                // Jika pengguna salah memasukkan password sebanyak tiga kali, maka kunci akun selama lima menit
+                await user[0].update({ loginAttempts: 0, lockedUntil: Date.now() + 300000 });
+                return res.status(401).json({ errors: [{ msg: 'Too many failed login attempts. Account is locked for 5 minutes.' }] });
+            }
+            return res.status(401).json({ errors: [{ msg: 'Invalid email or password.' }] });
+        }
+
+        // Jika kata sandi benar, maka reset counter loginAttempts
+        await user[0].update({ loginAttempts: 0 });
 
         const userId = user[0].id
         const name = user[0].name
@@ -70,7 +89,7 @@ const Login = async (req, res) => {
         })
 
         // kirimkan access token kepada client
-        res.json({accessToken})
+        res.json({ accessToken })
     } catch (error) {
         res.status(404).json({ msg: "Email tidak ditemukan" })
     }
