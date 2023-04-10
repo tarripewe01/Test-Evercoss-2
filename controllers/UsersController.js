@@ -43,7 +43,7 @@ const Login = async (req, res) => {
         // Jika akun pengguna terkunci, maka kirimkan pesan error
         if (user[0].lockedUntil && user[0].lockedUntil > Date.now()) {
             const remainingTime = Math.ceil((user.lockedUntil - Date.now()) / 1000);
-            return res.status(401).json({ errors: [{ msg: `Account is locked. Please try again in ${remainingTime} seconds.` }] });
+            return res.status(401).json({ errors: [{ msg: `Account is locked. Please try again in 5 minutes.` }] });
         }
 
         // Periksa password
@@ -52,7 +52,7 @@ const Login = async (req, res) => {
             // Jika password salah, maka increment counter loginAttempts
             await user[0].increment('loginAttempts');
             const loginAttempts = user[0].getDataValue('loginAttempts');
-            if (loginAttempts >= 3) {
+            if (loginAttempts >= 2) {
                 // Jika pengguna salah memasukkan password sebanyak tiga kali, maka kunci akun selama lima menit
                 await user[0].update({ loginAttempts: 0, lockedUntil: Date.now() + 300000 });
                 return res.status(401).json({ errors: [{ msg: 'Too many failed login attempts. Account is locked for 5 minutes.' }] });
