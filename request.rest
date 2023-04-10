@@ -1,0 +1,22 @@
+GET http://localhost:3000/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsIm5hbWUiOiJUYXJyaSBQZXdlIiwiZW1haWwiOiJ0YXJyaXBld2VAZ21haWwuY29tIiwiaWF0IjoxNjgxMTI1MjM0LCJleHAiOjE2ODExMjg4MzR9.4jXmbaROTe6qs9YZonWCCBA9UWSG7MyrksaYoOx27Iw
+
+###
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+    "name":"Tarri Pewe 2",
+    "email":"tarripewe3@gmail.com",
+    "password":"12345678",
+    "confirmPassword":"12345678"
+}
+
+###
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email":"tarripewe@gmail.com",
+    "password":"12345678"
+}
