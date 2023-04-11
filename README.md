@@ -36,5 +36,6 @@ dibuat sendiri (hanya list saja, tidak full CRUD)</li>
 <li>Buat file .env yang berisikan : ACCESS_SECRET_TOKEN = (isi value) &amp; REFRESH_SECRET_TOKEN = (isi value)</li>
 </ul><ul>
 <li>Jalankan project: npm run dev</li>
+<li>Database dump: https://drive.google.com/file/d/1NGVvLVszbOzGrnhHlgIN7ihcPryN3Kif/view?usp=sharing</li>
 </ul><h2>Contact</h2>
 <hr><p><span style="margin-right: 30px;"></span><a href="https://www.linkedin.com/in/tarriperithawesti/"><img target="_blank" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" style="width: 10%;"></a><span style="margin-right: 30px;"></span><a href="https://github.com/tarripewe01/Test-Evercoss-2"><img target="_blank" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" style="width: 10%;"></a></p>
