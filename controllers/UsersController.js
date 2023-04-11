@@ -95,4 +95,27 @@ const Login = async (req, res) => {
     }
 }
 
-module.exports = { getUsers, Register, Login };
+const Logout = async (req, res) => {
+
+    const refreshToken = req.cookies.refresh_token
+    if (!refreshToken) return res.sendStatus(204)
+
+    const user = await UsersModel.findAll({
+        where: {
+            refresh_token: refreshToken
+        }
+    })
+
+    if (!user[0]) return res.sendStatus(204)
+
+    const userId = user[0].id
+    await UsersModel.update({ refresh_token: null }, {
+        where: {
+            id: userId
+        }
+    })
+    res.clearCookie('refresh_token')
+    return res.sendStatus(200)
+}
+
+module.exports = { getUsers, Register, Login, Logout };
