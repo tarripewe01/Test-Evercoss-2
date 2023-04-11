@@ -1,5 +1,5 @@
 const express = require('express');
-const { getUsers, Register, Login, Logout } = require('../controllers/UsersController');
+const { getUsers, Register, Login, Logout, DeleteById } = require('../controllers/UsersController');
 const verifyToken = require('../middleware/VerifyToken');
 const refreshToken = require('../controllers/RefreshToken');
 
@@ -11,5 +11,6 @@ router.get('/token', refreshToken)
 router.delete('/logout', Logout)
 
 router.get('/users', verifyToken, getUsers)
+router.delete('/users/:id', verifyToken, DeleteById)
 
 module.exports = router

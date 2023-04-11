@@ -2,17 +2,6 @@ const UsersModel = require('../models/UserModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-const getUsers = async (req, res) => {
-    try {
-        const users = await UsersModel.findAll({
-            attributes: ['id', 'name', 'email', 'loginAttempts', 'lockedUntil']
-        })
-        res.json(users)
-    } catch (error) {
-        console.log(error)
-    }
-}
-
 const Register = async (req, res) => {
     const { name, email, password, confirmPassword } = req.body
     if (password != confirmPassword) return res.status(400).json({ msg: "Password dan Confirm Password tidak cocok " })
@@ -118,4 +107,37 @@ const Logout = async (req, res) => {
     return res.sendStatus(200)
 }
 
-module.exports = { getUsers, Register, Login, Logout };
+const getUsers = async (req, res) => {
+    try {
+        const users = await UsersModel.findAll({
+            attributes: ['id', 'name', 'email', 'loginAttempts', 'lockedUntil']
+        })
+        res.json(users)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const DeleteById = async (req, res) => {
+    const userId = req.params.id; // gunakan parameter `id` dari URL untuk mendapatkan ID pengguna
+    try {
+        const numDeleted = await UsersModel.destroy({
+            where: {
+                id: userId
+            }
+        });
+        if (numDeleted === 0) {
+            // penghapusan gagal, karena tidak ada baris yang dihapus
+            res.status(404).json({ message: `User with ID ${userId} not found` });
+        } else {
+            // penghapusan berhasil, mengembalikan jumlah baris yang dihapus
+            res.json({ message: `user dengan id ${userId} berhasil` });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
+module.exports = { getUsers, Register, Login, Logout , DeleteById};
